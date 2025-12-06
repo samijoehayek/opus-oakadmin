@@ -2,11 +2,16 @@
 
 import { Bell, Search } from "lucide-react";
 
+interface AdminUser {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+}
+
 interface AdminHeaderProps {
-  user: {
-    firstName: string;
-    lastName: string;
-  };
+  user: AdminUser;
 }
 
 export function AdminHeader({ user }: AdminHeaderProps) {
@@ -35,7 +40,9 @@ export function AdminHeader({ user }: AdminHeaderProps) {
             <p className="text-sm font-medium text-gray-900">
               {user.firstName} {user.lastName}
             </p>
-            <p className="text-xs text-gray-500">Administrator</p>
+            <p className="text-xs text-gray-500">
+              {user.role === "SUPER_ADMIN" ? "Super Admin" : "Administrator"}
+            </p>
           </div>
         </div>
       </div>

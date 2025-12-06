@@ -18,7 +18,7 @@ import {
   Package,
 } from "lucide-react";
 import { cn, formatPrice } from "@/lib/utils";
-import { productsService } from "@/services/products.service";
+import { productsService } from "@/services/product.service";
 import type { ProductListItem, ProductListResponse } from "@/types/product";
 
 export default function AdminProductsPage() {

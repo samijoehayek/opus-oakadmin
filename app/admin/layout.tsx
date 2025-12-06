@@ -1,9 +1,17 @@
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { AdminSidebar } from "@/components";
-import { AdminHeader } from "@/components";
+import { AdminSidebar } from "@/components/AdminSidebar";
+import { AdminHeader } from "@/components/AdminHeader";
 
-async function getUser() {
+interface AdminUser {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+}
+
+async function getAdminUser(): Promise<AdminUser | null> {
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value;
 
@@ -11,12 +19,23 @@ async function getUser() {
 
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Cookie: `accessToken=${token}`,
+      },
       cache: "no-store",
     });
 
     if (!response.ok) return null;
-    return response.json();
+
+    const user = await response.json();
+
+    // Verify admin role
+    if (user.role !== "ADMIN" && user.role !== "SUPER_ADMIN") {
+      return null;
+    }
+
+    return user;
   } catch {
     return null;
   }
@@ -27,11 +46,11 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await getUser();
+  const user = await getAdminUser();
 
-  // Redirect if not authenticated or not admin
-  if (!user || (user.role !== "ADMIN" && user.role !== "SUPER_ADMIN")) {
-    redirect("/auth?redirect=/admin");
+  // Redirect to admin login if not authenticated or not admin
+  if (!user) {
+    redirect("/admin/login");
   }
 
   return (

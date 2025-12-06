@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Package,
@@ -16,13 +16,16 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+interface AdminUser {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+}
+
 interface AdminSidebarProps {
-  user: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    role: string;
-  };
+  user: AdminUser;
 }
 
 const navigation = [
@@ -35,13 +38,35 @@ const navigation = [
 
 export function AdminSidebar({ user }: AdminSidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const isActive = (href: string) => {
     if (href === "/admin") {
       return pathname === "/admin";
     }
     return pathname.startsWith(href);
+  };
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+
+    // Clear cookies client-side
+    document.cookie = "accessToken=; Max-Age=0; path=/";
+    document.cookie = "refreshToken=; Max-Age=0; path=/";
+
+    router.push("/admin/login");
+    router.refresh();
   };
 
   const SidebarContent = () => (
@@ -110,12 +135,10 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
             Store
           </Link>
           <button
-            onClick={() => {
-              document.cookie = "accessToken=; Max-Age=0; path=/";
-              document.cookie = "refreshToken=; Max-Age=0; path=/";
-              window.location.href = "/auth";
-            }}
-            className="flex items-center justify-center p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            onClick={handleLogout}
+            disabled={isLoggingOut}
+            className="flex items-center justify-center p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+            title="Logout"
           >
             <LogOut className="h-4 w-4" />
           </button>
