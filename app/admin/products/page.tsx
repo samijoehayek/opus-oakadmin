@@ -80,7 +80,7 @@ export default function AdminProductsPage() {
           <p className="text-gray-500 mt-1">{total} products total</p>
         </div>
         <Link
-          href="/admin/products/new"
+          href="/admin/new"
           className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors"
         >
           <Plus className="h-4 w-4" />
@@ -168,7 +168,7 @@ export default function AdminProductsPage() {
                     <Package className="h-12 w-12 text-gray-300 mx-auto mb-4" />
                     <p className="text-gray-500">No products found</p>
                     <Link
-                      href="/admin/products/new"
+                      href="/admin/new"
                       className="inline-flex items-center gap-2 mt-4 text-sm text-gray-900 font-medium hover:underline"
                     >
                       <Plus className="h-4 w-4" />
@@ -242,7 +242,7 @@ export default function AdminProductsPage() {
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end gap-2">
                         <Link
-                          href={`/products/${product.slug}`}
+                          href={`/admin/${product.slug}`}
                           target="_blank"
                           className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                           title="View on store"
@@ -250,7 +250,7 @@ export default function AdminProductsPage() {
                           <Eye className="h-4 w-4" />
                         </Link>
                         <Link
-                          href={`/admin/products/${product.id}`}
+                          href={`/admin/${product.id}`}
                           className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                           title="Edit"
                         >

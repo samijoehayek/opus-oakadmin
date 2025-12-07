@@ -25,7 +25,7 @@ export default function AdminDashboard() {
         </Link>
 
         <Link
-          href="/admin/products/new"
+          href="/admin/new"
           className="flex items-center gap-4 p-6 bg-white rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all"
         >
           <div className="h-12 w-12 bg-green-50 rounded-lg flex items-center justify-center">
